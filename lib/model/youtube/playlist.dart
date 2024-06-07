@@ -1,8 +1,10 @@
-import 'package:flutter_musicplayer/model/youtube/thumbnail.dart';
+import 'dart:developer';
+
+import 'package:flutter_justplay_player/model/youtube/thumbnail.dart';
 
 class PlayList {
   ///Youtube playlist id
-  String? playListId;
+  String? id;
 
   ///Youtube playlist thumbnails
   List<Thumbnail>? thumbnails;
@@ -16,7 +18,7 @@ class PlayList {
   ///Youtube playlist number of videos
   String? videoCount;
 
-  PlayList({this.playListId, this.thumbnails, this.title, this.channelName, this.videoCount});
+  PlayList({this.id, this.thumbnails, this.title, this.channelName, this.videoCount});
 
   factory PlayList.fromMap(Map<String, dynamic>? map) {
     List<Thumbnail> thumbnails = [];
@@ -25,7 +27,7 @@ class PlayList {
           url: thumbnail['thumbnails'][0]['url'], width: thumbnail['thumbnails'][0]['width'], height: thumbnail['thumbnails'][0]['height']));
     });
     return PlayList(
-        playListId: map?['playlistRenderer']['playlistId'],
+        id: map?['playlistRenderer']['playlistId'],
         thumbnails: thumbnails,
         title: map?['playlistRenderer']['title']['simpleText'],
         videoCount: map?['playlistRenderer']['videoCount'],
@@ -34,7 +36,7 @@ class PlayList {
 
   Map<String, dynamic> toJson() {
     return {
-      "playListId": playListId,
+      "playListId": id,
       "thumbnails": thumbnails,
       "title": title,
       "videoCount": videoCount,

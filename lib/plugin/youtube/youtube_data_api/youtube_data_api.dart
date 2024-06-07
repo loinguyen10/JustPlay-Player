@@ -1,14 +1,14 @@
 library youtube_data_api;
 
-import 'package:flutter_musicplayer/helper/extract_json.dart';
-import 'package:flutter_musicplayer/helper/helpers_extention.dart';
-import 'package:flutter_musicplayer/model/youtube/channel.dart';
-import 'package:flutter_musicplayer/model/youtube/channel_data.dart';
-import 'package:flutter_musicplayer/model/youtube/playlist.dart';
-import 'package:flutter_musicplayer/model/youtube/video.dart';
-import 'package:flutter_musicplayer/model/youtube/video_data.dart';
-import 'package:flutter_musicplayer/model/youtube/video_page.dart';
-import 'package:flutter_musicplayer/plugin/youtube/youtube_data_api/retry.dart';
+import 'package:flutter_justplay_player/helper/extract_json.dart';
+import 'package:flutter_justplay_player/helper/helpers_extention.dart';
+import 'package:flutter_justplay_player/model/youtube/channel.dart';
+import 'package:flutter_justplay_player/model/youtube/channel_data.dart';
+import 'package:flutter_justplay_player/model/youtube/playlist.dart';
+import 'package:flutter_justplay_player/model/youtube/video.dart';
+import 'package:flutter_justplay_player/model/youtube/video_data.dart';
+import 'package:flutter_justplay_player/model/youtube/video_page.dart';
+import 'package:flutter_justplay_player/plugin/youtube/youtube_data_api/retry.dart';
 import 'package:http/http.dart' as http;
 import 'package:html/parser.dart' as parser;
 import 'package:collection/collection.dart';

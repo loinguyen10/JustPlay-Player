@@ -1,5 +1,5 @@
-import 'package:flutter_musicplayer/model/youtube/video.dart';
-import 'package:flutter_musicplayer/model/youtube/video_page.dart';
+import 'package:flutter_justplay_player/model/youtube/video.dart';
+import 'package:flutter_justplay_player/model/youtube/video_page.dart';
 
 class VideoData {
   VideoPage? video;

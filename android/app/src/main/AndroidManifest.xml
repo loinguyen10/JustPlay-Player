@@ -1,10 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.flutter_musicplayer">
-
-    <uses-permission android:name="android.permission.INTERNET"/>
-
+    package="com.example.flutter_justplay_player">
    <application
-        android:label="flutter_musicplayer"
+        android:label="flutter_justplay_player"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity
@@ -14,9 +11,7 @@
             android:theme="@style/LaunchTheme"
             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
             android:hardwareAccelerated="true"
-            android:windowSoftInputMode="adjustResize"
-            android:extractNativeLibs="true"
-            android:requestLegacyExternalStorage="true">
+            android:windowSoftInputMode="adjustResize">
             <!-- Specifies an Android theme to apply to this Activity as soon as
                  the Android process has started. This theme is visible to the user
                  while the Flutter UI initializes. After that, this theme continues

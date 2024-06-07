@@ -1,4 +1,4 @@
-name: flutter_musicplayer
+name: flutter_justplay_player
 description: A new Flutter project.
 
 # The following line prevents the package from being accidentally published to
@@ -42,12 +42,12 @@ dependencies:
   youtube_explode_dart: ^1.12.4
   provider: ^6.1.2
 
-  # youtube_data_api  
+  # youtube_data_api
   http: ^0.13.4
   html: ^0.15.0
   xml2json: ^5.3.3
   collection: ^1.16.0
-  
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

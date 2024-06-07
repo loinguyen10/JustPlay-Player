@@ -1,8 +1,11 @@
-import 'package:flutter_musicplayer/model/youtube/thumbnail.dart';
+import 'dart:developer';
+
+import 'package:flutter_justplay_player/model/youtube/channel.dart';
+import 'package:flutter_justplay_player/model/youtube/thumbnail.dart';
 
 class Video {
   ///Youtube video id
-  String? videoId;
+  String? id;
 
   ///Youtube video duration
   String? duration;
@@ -10,8 +13,8 @@ class Video {
   ///Youtube video title
   String? title;
 
-  ///Youtube video channel name
-  String? channelName;
+  ///Youtube video channel
+  Channel? channel;
 
   ///Youtube video views
   String? views;
@@ -19,55 +22,99 @@ class Video {
   ///Youtube video thumbnail
   List<Thumbnail>? thumbnails;
 
-  Video({this.videoId, this.duration, this.title, this.channelName, this.views, this.thumbnails});
+  ///Youtube video publish date
+  String? publishedTime;
+
+  Video({
+    this.id,
+    this.duration,
+    this.title,
+    this.channel,
+    this.views,
+    this.thumbnails,
+    this.publishedTime,
+  });
 
   factory Video.fromMap(Map<String, dynamic>? map) {
-    List<Thumbnail>? thumbnails;
+    List<Thumbnail> thumbnailsVideo = [];
+    List<Thumbnail> thumbnailChannel = [];
+
     if (map?.containsKey("videoRenderer") ?? false) {
       //Trending and search videos
       var lengthText = map?['videoRenderer']?['lengthText'];
-      var simpleText = map?['videoRenderer']?['shortViewCountText']?['simpleText'];
-      thumbnails = [];
+
       map?['videoRenderer']['thumbnail']['thumbnails'].forEach((thumbnail) {
-        thumbnails!.add(Thumbnail(url: thumbnail['url'], width: thumbnail['width'], height: thumbnail['height']));
+        thumbnailsVideo.add(Thumbnail(url: thumbnail['url'], width: thumbnail['width'], height: thumbnail['height']));
       });
+
+      map?['videoRenderer']['channelThumbnailSupportedRenderers']['channelThumbnailWithLinkRenderer']['thumbnail']['thumbnails'].forEach((thumbnail) {
+        thumbnailChannel.add(Thumbnail(url: thumbnail['url'], width: thumbnail['width'], height: thumbnail['height']));
+      });
+
+      final channel = Channel(
+        name: map?['videoRenderer']['longBylineText']['runs'][0]['text'],
+        thumbnail: thumbnailChannel,
+      );
+
       return Video(
-          videoId: map?['videoRenderer']?['videoId'],
-          duration: (lengthText == null) ? "Live" : lengthText?['simpleText'],
-          title: map?['videoRenderer']?['title']?['runs']?[0]?['text'],
-          channelName: map?['videoRenderer']['longBylineText']['runs'][0]['text'],
-          thumbnails: thumbnails,
-          views: (lengthText == null) ? "Views " + map!['videoRenderer']['viewCountText']['runs'][0]['text'] : simpleText);
+        id: map?['videoRenderer']?['videoId'],
+        duration: (lengthText == null) ? "Live" : lengthText?['simpleText'],
+        title: map?['videoRenderer']?['title']?['runs']?[0]?['text'],
+        channel: channel,
+        thumbnails: thumbnailsVideo,
+        publishedTime: map!['videoRenderer']['publishedTimeText']?['simpleText'],
+        views: (lengthText == null)
+            ? "Views " + map!['videoRenderer']['viewCountText']['simpleText']
+            : map?['videoRenderer']?['shortViewCountText']?['simpleText'],
+      );
     } else if (map?.containsKey("compactVideoRenderer") ?? false) {
       //Related videos
-      thumbnails = [];
       map?['compactVideoRenderer']['thumbnail']['thumbnails'].forEach((thumbnail) {
-        thumbnails!.add(Thumbnail(url: thumbnail['url'], width: thumbnail['width'], height: thumbnail['height']));
+        thumbnailsVideo!.add(Thumbnail(url: thumbnail['url'], width: thumbnail['width'], height: thumbnail['height']));
       });
+
+      map?['compactVideoRenderer']['channelThumbnail']['thumbnails'].forEach((thumbnail) {
+        thumbnailChannel.add(Thumbnail(url: thumbnail['url'], width: thumbnail['width'], height: thumbnail['height']));
+      });
+
+      final channel = Channel(
+        name: map?['compactVideoRenderer']?['ownerText']?[0]['text'],
+        thumbnail: thumbnailChannel,
+      );
+
       return Video(
-          videoId: map?['compactVideoRenderer']['videoId'],
+          id: map?['compactVideoRenderer']['videoId'],
           title: map?['compactVideoRenderer']?['title']?['simpleText'],
           duration: map?['compactVideoRenderer']?['lengthText']?['simpleText'],
-          thumbnails: thumbnails,
-          channelName: map?['compactVideoRenderer']?['shortBylineText']?['runs']?[0]?['text'],
+          thumbnails: thumbnailsVideo,
+          channel: channel,
+          publishedTime: map?['compactVideoRenderer']?['publishedTimeText']?['simpleText'],
           views: map?['compactVideoRenderer']?['viewCountText']?['simpleText']);
     } else if (map?.containsKey("gridVideoRenderer") ?? false) {
-      String? simpleText = map?['gridVideoRenderer']['shortViewCountText']?['simpleText'];
-      thumbnails = [];
+      // String? publishedDateSimpleText = map?['gridVideoRenderer']['shortViewCountText']?['simpleText'];
+      String? viewSimpleText = map?['gridVideoRenderer']['shortViewCountText']?['simpleText'];
+
       map?['gridVideoRenderer']['thumbnail']['thumbnails'].forEach((thumbnail) {
-        thumbnails!.add(Thumbnail(url: thumbnail['url'], width: thumbnail['width'], height: thumbnail['height']));
+        thumbnailsVideo!.add(Thumbnail(url: thumbnail['url'], width: thumbnail['width'], height: thumbnail['height']));
       });
       return Video(
-          videoId: map?['gridVideoRenderer']['videoId'],
+          id: map?['gridVideoRenderer']['videoId'],
           title: map?['gridVideoRenderer']['title']['runs'][0]['text'],
           duration: map?['gridVideoRenderer']['thumbnailOverlays'][0]['thumbnailOverlayTimeStatusRenderer']['text']['simpleText'],
-          thumbnails: thumbnails,
-          views: (simpleText != null) ? simpleText : "???");
+          thumbnails: thumbnailsVideo,
+          // publishedTime: (publishedDateSimpleText != null) ? publishedDateSimpleText : "???",
+          views: (viewSimpleText != null) ? viewSimpleText : "???");
     }
     return Video();
   }
 
   Map<String, dynamic> toJson() {
-    return {"videoId": videoId, "duration": duration, "title": title, "channelName": channelName, "views": views};
+    return {
+      "id": id,
+      "duration": duration,
+      "title": title,
+      "channel": channel,
+      "views": views,
+    };
   }
 }

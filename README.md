@@ -1,4 +1,4 @@
-# flutter_musicplayer
+# flutter_justplay_player
 
 A new Flutter project.
 

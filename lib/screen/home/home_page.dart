@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_justplay_player/screen/youtube/search/youtube_search_page.dart';
 import 'package:flutter_chocolatecookies/flutter_chocolatecookies.dart';
 import 'package:flutter_chocolatecookies/helper/navigator_helper.dart';
-import 'package:flutter_musicplayer/screen/player/youtube/youtube_player_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       body: ListView(
         children: [
-          _buildItem(icon: Icons.play_circle, title: 'Youtube', page: const YoutubePlayerPage()),
+          _buildItem(icon: Icons.play_circle, title: 'Youtube', page: const YoutubeSearchPage()),
           _buildItem(icon: Icons.wifi_rounded, title: 'Spotify', page: Container()),
           _buildItem(icon: Icons.cloud, title: 'Soundcloud', page: Container()),
         ],
@@ -34,7 +34,7 @@ class _HomePageState extends State<HomePage> {
           padding: const EdgeInsets.all(12),
           color: Colors.red,
           child: Row(
-            children: [Icon(icon), space(2), Text(title)],
+            children: [Icon(icon), space2, Text(title)],
           ),
         ),
       ),

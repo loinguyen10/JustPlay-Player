@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chocolatecookies/helper/build_helper.dart';
-import 'package:flutter_musicplayer/screen/home/home_page.dart';
+import 'package:flutter_justplay_player/screen/home/home_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});

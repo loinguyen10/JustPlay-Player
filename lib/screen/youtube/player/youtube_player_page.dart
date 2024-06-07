@@ -2,14 +2,15 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_chocolatecookies/flutter_chocolatecookies.dart';
-import 'package:flutter_musicplayer/model/youtube/video_data.dart';
-import 'package:flutter_musicplayer/screen/player/youtube/youtube_player_vm.dart';
+import 'package:flutter_justplay_player/model/youtube/video_data.dart';
+import 'package:flutter_justplay_player/screen/youtube/player/youtube_player_vm.dart';
 import 'package:flutter_chocolatecookies/widget/video_player.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
 
 class YoutubePlayerPage extends StatefulWidget {
-  const YoutubePlayerPage({super.key});
+  const YoutubePlayerPage({super.key, required this.youtubeId});
+  final String youtubeId;
 
   @override
   State<YoutubePlayerPage> createState() => _YoutubePlayerPageState();
@@ -26,32 +27,40 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
   String audioLink = '';
   VideoData? youtubeInfo;
 
-  Future<void> getYTLink(String id) async {
-    VideoData? info = await vm.youtubeDataApi.fetchVideoData(id);
+  Future<void> getYTInfo() async {
+    VideoData? info = await vm.youtubeDataApi.fetchVideoData(widget.youtubeId);
     youtubeInfo = info;
+  }
 
-    var manifest = await vm.yt.videos.streamsClient.getManifest(id);
-    videoLink = manifest.video.sortByVideoQuality().firstWhere((e) => e.tag <= 299).url.toString();
-    audioLink = manifest.audioOnly.last.url.toString();
+  Future<void> getYTLink() async {
+    try {
+      var manifest = await vm.yt.videos.streamsClient.getManifest(widget.youtubeId);
+      videoLink = manifest.video.sortByVideoQuality().firstWhere((e) => e.tag <= 299).url.toString();
+      audioLink = manifest.audioOnly.last.url.toString();
 
-    vm.videoPlayer = VideoPlayerController.networkUrl(Uri.parse(videoLink))
-      ..initialize().then((_) {
-        setState(() {});
-      });
+      vm.videoPlayer = VideoPlayerController.networkUrl(Uri.parse(videoLink))
+        ..initialize().then((_) {
+          setState(() {});
+        });
 
-    _initializeVideoPlayerFuture = vm.videoPlayer.initialize();
+      _initializeVideoPlayerFuture = vm.videoPlayer.initialize();
 
-    await vm.audioPlayer.setUrl(audioLink);
+      await vm.audioPlayer.setUrl(audioLink);
+    } catch (e) {
+      print(e);
+      getYTLink();
+    }
   }
 
   @override
   void initState() {
+    getYTInfo();
+    getYTLink();
     super.initState();
     vm.videoPlayer = VideoPlayerController.networkUrl(Uri.parse(videoLink))
       ..initialize().then((_) {
         setState(() {});
       });
-    getYTLink('oEh9ILDTCVU');
 
     // vm.audioPlayer.play();
   }
@@ -77,8 +86,14 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
                       videocontroller: vm.videoPlayer,
                       audioController: vm.audioPlayer,
                     ),
-                    space(8),
-                    _buildTitle(),
+                    space8,
+                    SingleChildScrollView(
+                      child: Column(
+                        children: [
+                          _buildTitle(),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -89,24 +104,25 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
 
   _buildTitle() {
     final data = youtubeInfo?.video;
+    bool open = false;
     return Container(
       width: mediaSize.width,
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: ExpansionTile(
+        onExpansionChanged: (value) => open = !open,
         title: Text(data?.title ?? ''),
-        subtitle: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisAlignment: MainAxisAlignment.start,
+        subtitle: Row(
           children: [
-            Row(
-              children: [
-                Text(data?.viewCount ?? ''),
-                Text(data?.date.toString() ?? ''),
-              ],
-            ),
-            Text(data?.description ?? ''),
+            Text(data?.shortViewCount ?? ''),
+            space8,
+            Text(data?.shortDate ?? ''),
           ],
         ),
+        children: [
+          Text(data?.description ?? ''),
+        ],
+        collapsedIconColor: Colors.white,
+        iconColor: Colors.white,
       ),
     );
   }

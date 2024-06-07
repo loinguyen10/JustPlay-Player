@@ -1,6 +1,6 @@
-import 'package:flutter_musicplayer/helper/helpers_extention.dart';
-import 'package:flutter_musicplayer/model/youtube/channel_page.dart';
-import 'package:flutter_musicplayer/model/youtube/video.dart';
+import 'package:flutter_justplay_player/helper/helpers_extention.dart';
+import 'package:flutter_justplay_player/model/youtube/channel_page.dart';
+import 'package:flutter_justplay_player/model/youtube/video.dart';
 import 'package:collection/collection.dart';
 
 class ChannelData {
