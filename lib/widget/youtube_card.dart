@@ -50,7 +50,7 @@ class YoutubeVideoCard extends StatelessWidget {
                       space4,
                       Text(
                         '${video.channel?.name ?? ''} · ${video.views ?? 0} · ${video.publishedTime ?? ''}',
-                        style: const AppStyle().size12,
+                        style: AppStyle.textNormal.size12,
                       ),
                     ],
                   ),
@@ -159,7 +159,7 @@ class YoutubePlaylistCard extends StatelessWidget {
                   overflow: TextOverflow.ellipsis,
                 ),
                 space4,
-                Text('${playlist.channelName ?? ''} · Playlist', style: const AppStyle().text(size: 11.5)),
+                Text('${playlist.channelName ?? ''} · Playlist', style: AppStyle.text(size: 11.5)),
               ],
             ),
             // ],

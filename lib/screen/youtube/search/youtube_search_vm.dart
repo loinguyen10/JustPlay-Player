@@ -3,20 +3,25 @@ import 'package:flutter_justplay_player/api/youtube_api.dart';
 import 'package:flutter_justplay_player/plugin/youtube/youtube_data_api/youtube_data_api.dart';
 
 class YoutubeSearchViewModel extends ChangeNotifier {
-  YoutubeDataApi youtubeDataApi = YoutubeDataApi();
+  final youtubeDataApi = YoutubeDataApi();
   final api = YoutubeAPI();
   List result = [];
-  final searchWordController = TextEditingController();
   bool isLoading = false;
   List<String> autoComplete = [];
-  bool empty = true;
+  // bool empty = true;
+  final focusNode = FocusNode();
+
+  final searchTextController = TextEditingController();
+  String lastSearch = '';
 
   Future<void> search() async {
     try {
       isLoading = true;
-      List videoResult = await youtubeDataApi.fetchSearchVideo('hk15', '');
+      lastSearch = searchTextController.text;
+      List videoResult = await youtubeDataApi.fetchSearchVideo(searchTextController.text, '');
       result = videoResult;
     } catch (e) {
+      searchTextController.text = lastSearch;
       print('search youtube: $e');
     } finally {
       isLoading = false;
@@ -36,9 +41,9 @@ class YoutubeSearchViewModel extends ChangeNotifier {
     // } finally {
     //   notifyListeners();
     // }
-    var getSuggestions = await youtubeDataApi.fetchSuggestions('hk15');
+    var getSuggestions = await youtubeDataApi.fetchSuggestions(searchTextController.text);
     autoComplete = getSuggestions;
-    if (autoComplete.isNotEmpty) empty = false;
+    // if (autoComplete.isNotEmpty) empty = false;
     notifyListeners();
   }
 }
