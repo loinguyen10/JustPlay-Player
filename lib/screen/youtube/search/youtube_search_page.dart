@@ -59,7 +59,7 @@ class _YoutubeSearchPageState extends State<YoutubeSearchPage> {
               child: const Icon(Icons.arrow_back),
             ),
             title: InputText(
-              textStyle: AppStyle.textNormal.size12,
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               autoFocus: true,
               controller: vm.searchTextController,
               hintText: 'Tìm kiếm',
@@ -87,6 +87,9 @@ class _YoutubeSearchPageState extends State<YoutubeSearchPage> {
                 }
                 stateChange();
               },
+              onFieldSubmitted: (value) async {
+                await vm.search();
+              },
             ),
             actions: [
               Padding(
@@ -108,7 +111,8 @@ class _YoutubeSearchPageState extends State<YoutubeSearchPage> {
                   color: Colors.white,
                   child: ListView.builder(
                     itemCount: vm.autoComplete.length,
-                    itemBuilder: (context, index) => _buildItem(vm.autoComplete[index]),
+                    itemBuilder: (context, index) =>
+                        _buildItem(vm.autoComplete[index]),
                   ),
                 ),
               )

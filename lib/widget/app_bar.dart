@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chocolatecookies/helper/navigator_helper.dart';
 
-class AppBarPlayer extends StatelessWidget with PreferredSizeWidget {
+class AppBarPlayer extends StatelessWidget implements PreferredSizeWidget {
   const AppBarPlayer({
     super.key,
     this.title,
