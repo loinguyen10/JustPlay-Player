@@ -17,8 +17,7 @@ class YoutubeSearchViewModel extends ChangeNotifier {
   Future<void> search() async {
     try {
       isLoading = true;
-      List videoResult =
-          await youtubeDataApi.fetchSearchVideo(searchTextController.text, '');
+      List videoResult = await youtubeDataApi.fetchSearchVideo(searchTextController.text, '');
       lastSearch = searchTextController.text;
       result = videoResult;
     } catch (e) {
@@ -42,8 +41,7 @@ class YoutubeSearchViewModel extends ChangeNotifier {
     // } finally {
     //   notifyListeners();
     // }
-    var getSuggestions =
-        await youtubeDataApi.fetchSuggestions(searchTextController.text);
+    var getSuggestions = await youtubeDataApi.fetchSuggestions(searchTextController.text);
     autoComplete = getSuggestions;
     // if (autoComplete.isNotEmpty) empty = false;
     notifyListeners();

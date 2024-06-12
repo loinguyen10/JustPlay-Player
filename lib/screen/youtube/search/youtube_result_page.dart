@@ -18,26 +18,26 @@ class YoutubeResultPage extends StatefulWidget {
 }
 
 class _YoutubeResultPageState extends State<YoutubeResultPage> {
-  YoutubeSearchViewModel get vm => widget.vm;
+  YoutubeSearchViewModel get _vm => widget.vm;
 
   @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
-      create: (context) => vm,
+      create: (context) => _vm,
       builder: (context, child) {
         return LoadingPage(
-          isLoading: vm.isLoading,
+          isLoading: _vm.isLoading,
           child: ListView.builder(
-            itemCount: vm.result.length,
+            itemCount: _vm.result.length,
             itemBuilder: (context, index) {
-              if (vm.result[index] is Video) {
-                Video video = vm.result[index];
+              if (_vm.result[index] is Video) {
+                Video video = _vm.result[index];
                 return YoutubeVideoCard(video: video);
-              } else if (vm.result[index] is Channel) {
-                Channel channel = vm.result[index];
+              } else if (_vm.result[index] is Channel) {
+                Channel channel = _vm.result[index];
                 return YoutubeChannelCard(channel: channel);
-              } else if (vm.result[index] is PlayList) {
-                PlayList playlist = vm.result[index];
+              } else if (_vm.result[index] is PlayList) {
+                PlayList playlist = _vm.result[index];
                 return YoutubePlaylistCard(playlist: playlist);
               }
               return Container();

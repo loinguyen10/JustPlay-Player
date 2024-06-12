@@ -89,6 +89,7 @@ class _YoutubeSearchPageState extends State<YoutubeSearchPage> {
               },
               onFieldSubmitted: (value) async {
                 await vm.search();
+                stateChange();
               },
             ),
             actions: [
@@ -111,8 +112,7 @@ class _YoutubeSearchPageState extends State<YoutubeSearchPage> {
                   color: Colors.white,
                   child: ListView.builder(
                     itemCount: vm.autoComplete.length,
-                    itemBuilder: (context, index) =>
-                        _buildItem(vm.autoComplete[index]),
+                    itemBuilder: (context, index) => _buildItem(vm.autoComplete[index]),
                   ),
                 ),
               )
@@ -129,6 +129,7 @@ class _YoutubeSearchPageState extends State<YoutubeSearchPage> {
         vm.searchTextController.text = value;
         vm.focusNode.unfocus();
         await vm.search();
+        stateChange();
       },
       padding: const EdgeInsets.symmetric(horizontal: 8),
       child: Row(

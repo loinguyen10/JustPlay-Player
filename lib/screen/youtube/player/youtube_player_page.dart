@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_chocolatecookies/flutter_chocolatecookies.dart';
 import 'package:flutter_justplay_player/model/youtube/video_data.dart';
 import 'package:flutter_justplay_player/screen/youtube/player/youtube_player_vm.dart';
@@ -38,8 +39,10 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
       videoLink = manifest.video.sortByVideoQuality().firstWhere((e) => e.tag <= 299).url.toString();
       audioLink = manifest.audioOnly.last.url.toString();
 
-      vm.videoPlayer = VideoPlayerController.networkUrl(Uri.parse(videoLink))
-        ..initialize().then((_) {
+      vm.videoPlayer = VideoPlayerController.networkUrl(
+        Uri.parse(videoLink),
+        videoPlayerOptions: VideoPlayerOptions(mixWithOthers: true),
+      )..initialize().then((_) {
           setState(() {});
         });
 
@@ -57,7 +60,7 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
     getYTInfo();
     getYTLink();
     super.initState();
-    vm.videoPlayer = VideoPlayerController.networkUrl(Uri.parse(videoLink))
+    vm.videoPlayer = VideoPlayerController.networkUrl(Uri.parse(''))
       ..initialize().then((_) {
         setState(() {});
       });
@@ -67,8 +70,8 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
 
   @override
   void dispose() {
-    // Ensure disposing of the VideoPlayerController to free up resources.
-    vm.videoPlayer.dispose();
+    // vm.videoPlayer.dispose();
+    vm.yt.close();
     super.dispose();
   }
 
@@ -87,11 +90,13 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
                       audioController: vm.audioPlayer,
                     ),
                     space8,
-                    SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          _buildTitle(),
-                        ],
+                    Expanded(
+                      child: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            _buildTitle(),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -108,21 +113,23 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
     return Container(
       width: mediaSize.width,
       padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: ExpansionTile(
-        onExpansionChanged: (value) => open = !open,
-        title: Text(data?.title ?? ''),
-        subtitle: Row(
+      child: Expanded(
+        child: ExpansionTile(
+          onExpansionChanged: (value) => open = !open,
+          title: Text(data?.title ?? ''),
+          subtitle: Row(
+            children: [
+              Text(data?.shortViewCount ?? ''),
+              space8,
+              Text(data?.shortDate ?? ''),
+            ],
+          ),
           children: [
-            Text(data?.shortViewCount ?? ''),
-            space8,
-            Text(data?.shortDate ?? ''),
+            Text(data?.description ?? ''),
           ],
+          collapsedIconColor: Colors.white,
+          iconColor: Colors.white,
         ),
-        children: [
-          Text(data?.description ?? ''),
-        ],
-        collapsedIconColor: Colors.white,
-        iconColor: Colors.white,
       ),
     );
   }
