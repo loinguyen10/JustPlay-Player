@@ -64,7 +64,7 @@ class Video {
         thumbnails: thumbnailsVideo,
         publishedTime: map!['videoRenderer']['publishedTimeText']?['simpleText'],
         views: (lengthText == null)
-            ? "Views " + map!['videoRenderer']['viewCountText']['simpleText']
+            ? map!['videoRenderer']['viewCountText']['runs'][0]['text'] + map!['videoRenderer']['viewCountText']['runs'][1]['text']
             : map?['videoRenderer']?['shortViewCountText']?['simpleText'],
       );
     } else if (map?.containsKey("compactVideoRenderer") ?? false) {

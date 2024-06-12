@@ -1,5 +1,7 @@
 library youtube_data_api;
 
+import 'dart:developer';
+
 import 'package:flutter_justplay_player/helper/extract_json.dart';
 import 'package:flutter_justplay_player/helper/helpers_extention.dart';
 import 'package:flutter_justplay_player/model/youtube/channel.dart';
@@ -92,6 +94,21 @@ class YoutubeDataApi {
             ///Element is Playlist
             PlayList playList = PlayList.fromMap(element);
             list.add(playList);
+          } else if (element.containsKey('reelShelfRenderer')) {
+            ///Element is Short
+            // PlayList playList = PlayList.fromMap(element);
+            // list.add(playList);
+            log('short: ${element.toString()}');
+          } else if (element.containsKey('radioRenderer')) {
+            ///Element is Radio
+            // PlayList playList = PlayList.fromMap(element);
+            // list.add(playList);
+            log('danh sách kết hợp: ${element.toString()}');
+          } else if (element.containsKey('shelfRenderer')) {
+            ///Element is Post
+            // PlayList playList = PlayList.fromMap(element);
+            // list.add(playList);
+            log('post: ${element.toString()}');
           }
         });
         _searchToken = _getContinuationToken(jsonMap);
