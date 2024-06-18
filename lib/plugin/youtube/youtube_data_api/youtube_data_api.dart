@@ -57,7 +57,38 @@ class YoutubeDataApi {
             ?.firstOrNull
             ?.get('itemSectionRenderer')
             ?.getList('contents');
-        list = contents!.toList();
+        // list = contents!.toList();
+        var contentList = contents?.toList();
+        contentList?.forEach((element) {
+          if (element.containsKey('videoRenderer')) {
+            ///Element is Video
+            Video video = Video.fromMap(element);
+            list.add(video);
+          } else if (element.containsKey('channelRenderer')) {
+            ///Element is Channel
+            Channel channel = Channel.fromMap(element);
+            list.add(channel);
+          } else if (element.containsKey('playlistRenderer')) {
+            ///Element is Playlist
+            PlayList playList = PlayList.fromMap(element);
+            list.add(playList);
+          } else if (element.containsKey('reelShelfRenderer')) {
+            ///Element is Short
+            // PlayList playList = PlayList.fromMap(element);
+            // list.add(playList);
+            // log('short: ${element.toString()}');
+          } else if (element.containsKey('radioRenderer')) {
+            ///Element is Radio
+            // PlayList playList = PlayList.fromMap(element);
+            // list.add(playList);
+            // log('danh sách kết hợp: ${element.toString()}');
+          } else if (element.containsKey('shelfRenderer')) {
+            ///Element is Post
+            // PlayList playList = PlayList.fromMap(element);
+            // list.add(playList);
+            // log('post: ${element.toString()}');
+          }
+        });
         _searchToken = _getContinuationToken(jsonMap);
         return list;
       });
@@ -98,17 +129,17 @@ class YoutubeDataApi {
             ///Element is Short
             // PlayList playList = PlayList.fromMap(element);
             // list.add(playList);
-            log('short: ${element.toString()}');
+            // log('short: ${element.toString()}');
           } else if (element.containsKey('radioRenderer')) {
             ///Element is Radio
             // PlayList playList = PlayList.fromMap(element);
             // list.add(playList);
-            log('danh sách kết hợp: ${element.toString()}');
+            // log('danh sách kết hợp: ${element.toString()}');
           } else if (element.containsKey('shelfRenderer')) {
             ///Element is Post
             // PlayList playList = PlayList.fromMap(element);
             // list.add(playList);
-            log('post: ${element.toString()}');
+            // log('post: ${element.toString()}');
           }
         });
         _searchToken = _getContinuationToken(jsonMap);

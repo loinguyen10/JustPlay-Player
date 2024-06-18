@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_justplay_player/model/youtube/thumbnail.dart';
@@ -24,6 +25,9 @@ class Channel {
   ///Youtube channel number of sub
   String? subscriberNumber;
 
+  ///Youtube channel verified
+  bool? isVerified;
+
   Channel({
     this.id,
     this.name,
@@ -32,6 +36,7 @@ class Channel {
     this.thumbnail,
     // this.videoCount,
     this.subscriberNumber,
+    this.isVerified,
   });
 
   factory Channel.fromMap(Map<String, dynamic>? map) {
@@ -49,6 +54,7 @@ class Channel {
       // videoCount: map?['channelRenderer']['videoCountText']['runs'] //[0]['text']
       // subscriberNumber: map?['channelRenderer']['videoCountText']['accessibility']['accessibilityData']['label'],
       subscriberNumber: map?['channelRenderer']['videoCountText']['simpleText'],
+      isVerified: map?['channelRenderer']['ownerBadges'] != null ? true : false,
     );
   }
 

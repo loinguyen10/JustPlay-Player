@@ -14,17 +14,40 @@ class YoutubeSearchViewModel extends ChangeNotifier {
   final searchTextController = TextEditingController();
   String lastSearch = '';
 
+  final scrollController = ScrollController();
+
   Future<void> search() async {
     try {
       isLoading = true;
+      print('Searching...');
       List videoResult = await youtubeDataApi.fetchSearchVideo(searchTextController.text, '');
-      lastSearch = searchTextController.text;
       result = videoResult;
+      lastSearch = searchTextController.text;
     } catch (e) {
       searchTextController.text = lastSearch;
       print('search youtube: $e');
     } finally {
+      scrollController.jumpTo(0);
       isLoading = false;
+      print('Done');
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadMore() async {
+    try {
+      // isLoading = true;
+      print('Loading more...');
+      List videoResult = await youtubeDataApi.fetchSearchVideo(lastSearch, '');
+      videoResult.forEach((e) {
+        if (!result.contains(e)) result.add(e);
+      });
+      // result.addAll(videoResult);
+    } catch (e) {
+      print('load more youtube: $e');
+    } finally {
+      // isLoading = false;
+      print('Done');
       notifyListeners();
     }
   }

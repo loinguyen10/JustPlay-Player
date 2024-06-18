@@ -71,10 +71,17 @@ class VideoPage {
       videoId: videoId,
       title: map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['title']['runs'][0]['text'],
       channel: channel,
-      viewCount: map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['viewCount']['videoViewCountRenderer']['viewCount']
-          ['simpleText'],
-      shortViewCount: map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['viewCount']['videoViewCountRenderer']['shortViewCount']
-          ['simpleText'],
+      viewCount: (map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['viewCount']['videoViewCountRenderer']['viewCount']
+              ['simpleText']) ??
+          (map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['viewCount']['videoViewCountRenderer']['viewCount']['runs'][0]
+                  ['text'] +
+              map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['viewCount']['videoViewCountRenderer']['viewCount']['runs'][1]
+                  ['text']),
+      shortViewCount:
+          (map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['viewCount']['videoViewCountRenderer']['shortViewCount'] != null)
+              ? (map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['viewCount']['videoViewCountRenderer']['shortViewCount']
+                  ['simpleText'])
+              : null,
       subscribeCount: map?['results']?['results']?['contents']?[1]?['videoSecondaryInfoRenderer']?['owner']?['videoOwnerRenderer']
           ?['subscriberCountText']?['simpleText'],
       likeCount: map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['videoActions']['menuRenderer']['topLevelButtons'][0]
@@ -83,8 +90,11 @@ class VideoPage {
       // description: collectDescriptionString(map?['results']?['results']?['contents']?[1]?['videoSecondaryInfoRenderer']?['description']?['runs']),
       description: map?['results']?['results']?['contents']?[1]?['videoSecondaryInfoRenderer']?['attributedDescription']?['content'],
       date: map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['dateText']['simpleText'],
-      shortDate: map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['relativeDateText']['accessibility']['simpleText'] ??
-          map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['relativeDateText']['accessibility']['accessibilityData']['label'],
+      shortDate: (map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['relativeDateText'] != null)
+          ? (map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['relativeDateText']['accessibility']['simpleText'] ??
+              map?['results']['results']['contents'][0]['videoPrimaryInfoRenderer']['relativeDateText']['accessibility']['accessibilityData']
+                  ['label'])
+          : null,
     );
   }
 }

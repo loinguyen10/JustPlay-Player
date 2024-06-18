@@ -1,17 +1,18 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_chocolatecookies/flutter_chocolatecookies.dart';
+import 'package:flutter_chocolatecookies/widget/item_card.dart';
 import 'package:flutter_justplay_player/model/youtube/video_data.dart';
 import 'package:flutter_justplay_player/screen/youtube/player/youtube_player_vm.dart';
 import 'package:flutter_chocolatecookies/widget/video_player.dart';
 import 'package:provider/provider.dart';
 import 'package:youtube_explode_dart/youtube_explode_dart.dart';
+import 'package:flutter_justplay_player/model/youtube/video.dart' as YTVideoData;
 
 class YoutubePlayerPage extends StatefulWidget {
-  const YoutubePlayerPage({super.key, required this.youtubeId});
-  final String youtubeId;
+  const YoutubePlayerPage({super.key, required this.youtubeVideo});
+  final YTVideoData.Video youtubeVideo;
 
   @override
   State<YoutubePlayerPage> createState() => _YoutubePlayerPageState();
@@ -28,14 +29,20 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
   String audioLink = '';
   VideoData? youtubeInfo;
 
+  String get ytId => widget.youtubeVideo.id!;
+
   Future<void> getYTInfo() async {
-    VideoData? info = await vm.youtubeDataApi.fetchVideoData(widget.youtubeId);
+    VideoData? info = await vm.youtubeDataApi.fetchVideoData(ytId);
     youtubeInfo = info;
+
+    var video = await vm.yt.videos.get('https://youtu.be/$ytId');
+    vm.comments = await vm.yt.videos.commentsClient.getComments(video);
+    stateChange();
   }
 
   Future<void> getYTLink() async {
     try {
-      var manifest = await vm.yt.videos.streamsClient.getManifest(widget.youtubeId);
+      var manifest = await vm.yt.videos.streamsClient.getManifest(ytId);
       videoLink = manifest.video.sortByVideoQuality().firstWhere((e) => e.tag <= 299).url.toString();
       audioLink = manifest.audioOnly.last.url.toString();
 
@@ -58,19 +65,32 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
   @override
   void initState() {
     getYTInfo();
-    getYTLink();
-    super.initState();
-    vm.videoPlayer = VideoPlayerController.networkUrl(Uri.parse(''))
-      ..initialize().then((_) {
+    stateChange();
+    // if (widget.youtubeVideo.isLive!) {
+    vm.streamPlayer = PodPlayerController(
+      playVideoFrom: PlayVideoFrom.youtube(
+        'https://youtu.be/$ytId',
+        live: widget.youtubeVideo.isLive!,
+      ),
+    )..initialise().then((_) {
         setState(() {});
       });
+    // } else {
+    //   getYTLink();
+    //   vm.videoPlayer = VideoPlayerController.networkUrl(Uri.parse(''))
+    //     ..initialize().then((_) {
+    //       setState(() {});
+    //     });
+    // }
+    super.initState();
 
     // vm.audioPlayer.play();
   }
 
   @override
   void dispose() {
-    // vm.videoPlayer.dispose();
+    vm.videoPlayer.dispose();
+    vm.streamPlayer.dispose();
     vm.yt.close();
     super.dispose();
   }
@@ -85,16 +105,25 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
               child: Scaffold(
                 body: Column(
                   children: [
-                    VideoScreenPlayer(
-                      videocontroller: vm.videoPlayer,
-                      audioController: vm.audioPlayer,
-                    ),
+                    // widget.youtubeVideo.isLive! ?
+                    PodVideoPlayer(controller: vm.streamPlayer)
+                    // : VideoScreenPlayer( videocontroller: vm.videoPlayer, audioController: vm.audioPlayer, )
+                    ,
                     space8,
                     Expanded(
                       child: SingleChildScrollView(
                         child: Column(
                           children: [
                             _buildTitle(),
+                            ListView.builder(
+                              shrinkWrap: true,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemCount: vm.comments?.length ?? 0,
+                              itemBuilder: (context, index) {
+                                CommentsList? replies = getReply(vm.comments![index]) as CommentsList?;
+                                return Text('hahaa');
+                              },
+                            ),
                           ],
                         ),
                       ),
@@ -121,16 +150,72 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
             children: [
               Text(data?.shortViewCount ?? ''),
               space8,
-              Text(data?.shortDate ?? ''),
+              Text(data?.shortDate ?? data?.date ?? ''),
             ],
           ),
-          children: [
-            Text(data?.description ?? ''),
-          ],
           collapsedIconColor: Colors.white,
           iconColor: Colors.white,
+          children: [
+            Text(data?.date ?? ''),
+            Text(data?.description ?? ''),
+            ItemCard(
+              borderWidth: 2,
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      style: AppStyle.textNormal.blackText,
+                      children: [
+                        const WidgetSpan(
+                          child: Icon(Icons.thumb_up, size: 14),
+                        ),
+                        TextSpan(
+                          text: '${data?.likeCount ?? 0}',
+                        ),
+                      ],
+                    ),
+                  ),
+                  RichText(
+                    text: TextSpan(
+                      style: AppStyle.textNormal.blackText,
+                      children: const [
+                        WidgetSpan(
+                          child: Icon(Icons.thumb_up, size: 14),
+                        ),
+                        TextSpan(
+                          text: '',
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
+          ],
         ),
       ),
     );
+  }
+
+  _buildComment(Comment comment) {
+    return Column(
+      children: [
+        Text(comment.author),
+        Text(comment.text),
+        const Row(
+          children: [
+            Icon(Icons.thumb_up),
+            Icon(Icons.thumb_down),
+            Icon(Icons.comment),
+          ],
+        ),
+      ],
+    );
+  }
+
+  Future<CommentsList?> getReply(Comment comment) async {
+    final result = await vm.getReplies(comment);
+    return result;
   }
 }

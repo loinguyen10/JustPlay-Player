@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter_justplay_player/model/youtube/channel.dart';
@@ -25,6 +26,9 @@ class Video {
   ///Youtube video publish date
   String? publishedTime;
 
+  ///Youtube video publish date
+  bool? isLive;
+
   Video({
     this.id,
     this.duration,
@@ -33,6 +37,7 @@ class Video {
     this.views,
     this.thumbnails,
     this.publishedTime,
+    this.isLive,
   });
 
   factory Video.fromMap(Map<String, dynamic>? map) {
@@ -54,6 +59,8 @@ class Video {
       final channel = Channel(
         name: map?['videoRenderer']['longBylineText']['runs'][0]['text'],
         thumbnail: thumbnailChannel,
+        isVerified: map?['videoRenderer']['ownerBadges'] != null ? true : false,
+        // ? (map?['videoRenderer']['ownerBadges'][0]['metadataBadgeRenderer']['style'] == 'BADGE_STYLE_TYPE_VERIFIED')
       );
 
       return Video(
@@ -66,6 +73,9 @@ class Video {
         views: (lengthText == null)
             ? map!['videoRenderer']['viewCountText']['runs'][0]['text'] + map!['videoRenderer']['viewCountText']['runs'][1]['text']
             : map?['videoRenderer']?['shortViewCountText']?['simpleText'],
+        isLive: map!['videoRenderer']['badges'] != null
+            ? (map?['videoRenderer']['badges'][0]['metadataBadgeRenderer']['style'] == 'BADGE_STYLE_TYPE_LIVE_NOW')
+            : false,
       );
     } else if (map?.containsKey("compactVideoRenderer") ?? false) {
       //Related videos
