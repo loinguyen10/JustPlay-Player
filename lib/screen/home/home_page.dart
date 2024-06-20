@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_justplay_player/screen/spotify/spotify_result_page.dart';
-import 'package:flutter_justplay_player/screen/spotify/spotify_search_page.dart';
-import 'package:flutter_justplay_player/screen/spotify/spotify_vm.dart';
+import 'package:flutter_justplay_player/screen/spotify/search/spotify_result_page.dart';
+import 'package:flutter_justplay_player/screen/spotify/search/spotify_search_page.dart';
+import 'package:flutter_justplay_player/screen/spotify/search/spotify_vm.dart';
 import 'package:flutter_justplay_player/screen/youtube/search/youtube_search_page.dart';
 import 'package:flutter_chocolatecookies/flutter_chocolatecookies.dart';
 import 'package:flutter_chocolatecookies/helper/navigator_helper.dart';

@@ -103,10 +103,12 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
               child: Scaffold(
                 body: Column(
                   children: [
-                    // widget.youtubeVideo.isLive! ?
-                    PodVideoPlayer(controller: vm.streamPlayer)
-                    // : VideoScreenPlayer( videocontroller: vm.videoPlayer, audioController: vm.audioPlayer, )
-                    ,
+                    widget.youtubeVideo.isLive!
+                        ? PodVideoPlayer(controller: vm.streamPlayer)
+                        : VideoScreenPlayer(
+                            videocontroller: vm.videoPlayer,
+                            audioController: vm.audioPlayer,
+                          ),
                     space8,
                     Expanded(
                       child: SingleChildScrollView(

@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_chocolatecookies/flutter_chocolatecookies.dart';
 import 'package:flutter_chocolatecookies/helper/navigator_helper.dart';
 import 'package:flutter_chocolatecookies/widget/item_card.dart';
-import 'package:flutter_justplay_player/screen/spotify/spotify_result_page.dart';
-import 'package:flutter_justplay_player/screen/spotify/spotify_vm.dart';
+import 'package:flutter_justplay_player/screen/spotify/search/spotify_result_page.dart';
+import 'package:flutter_justplay_player/screen/spotify/search/spotify_vm.dart';
 import 'package:flutter_justplay_player/style/color.dart';
 import 'package:flutter_justplay_player/widget/app_bar.dart';
 import 'package:provider/provider.dart';
@@ -68,7 +69,7 @@ class _SpotifySearchPageState extends State<SpotifySearchPage> {
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
               autoFocus: true,
               controller: vm.searchTextController,
-              hintText: 'Tìm kiếm',
+              hintText: 'Bạn muốn nghe gì',
               textAlignVertical: TextAlignVertical.center,
               focusNode: vm.focusNode,
               suffixIcon: vm.searchTextController.text.isNotEmpty
@@ -98,33 +99,15 @@ class _SpotifySearchPageState extends State<SpotifySearchPage> {
                 stateChange();
               },
             ),
-            actions: [
+            actions: const [
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: !vm.focusNode.hasFocus
-                    ? const Icon(
-                        Icons.settings,
-                      )
-                    : space0,
+                padding: EdgeInsets.symmetric(horizontal: 16.0),
               )
             ],
           ),
           body: Stack(
             children: [
               SpotifyResultPage(vm: vm),
-              ItemCard(
-                margin: EdgeInsets.zero,
-                padding: EdgeInsets.zero,
-                cardColor: Colors.red,
-                child: Row(
-                  children: [
-                    buildTabBar(vm.trackResult, 'Track'),
-                    buildTabBar(vm.artistResult, 'Artist'),
-                    buildTabBar(vm.playlistResult, 'Playlist'),
-                    buildTabBar(vm.albumResult, 'Album'),
-                  ],
-                ),
-              ),
               Visibility(
                 visible: vm.focusNode.hasFocus,
                 child: Container(
@@ -179,16 +162,5 @@ class _SpotifySearchPageState extends State<SpotifySearchPage> {
       ),
     );
     return item;
-  }
-
-  buildTabBar(List list, String title) {
-    return ItemCard(
-      onTap: () {
-        vm.result = list;
-        stateChange();
-      },
-      borderColor: Colors.black,
-      child: Text(title),
-    );
   }
 }

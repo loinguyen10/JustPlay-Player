@@ -26,10 +26,11 @@ class SpotifyViewModel extends ChangeNotifier {
       isLoading = true;
       print("Searching:");
       if (searchTextController.text != lastSearch) {
-        playlistResult.clear();
-        artistResult.clear();
-        trackResult.clear();
-        albumResult.clear();
+        // playlistResult.clear();
+        // artistResult.clear();
+        // trackResult.clear();
+        // albumResult.clear();
+        result.clear();
         resultLength = 0;
       }
       var search = await spotify.search.get(searchTextController.text).first();
@@ -39,29 +40,36 @@ class SpotifyViewModel extends ChangeNotifier {
           print('Empty items');
         } else {
           for (var item in pages.items!) {
-            if (item is PlaylistSimple) {
-              playlistResult.add(item);
-            }
-            if (item is Artist) {
-              artistResult.add(item);
-            }
-            if (item is Track) {
-              trackResult.add(item);
-            }
-            if (item is AlbumSimple) {
-              albumResult.add(item);
-            }
+            // if (item is PlaylistSimple) {
+            //   playlistResult.add(item);
+            // }
+            // if (item is Artist) {
+            //   artistResult.add(item);
+            // }
+            // if (item is Track) {
+            //   trackResult.add(item);
+            // }
+            // if (item is AlbumSimple) {
+            //   albumResult.add(item);
+            // }
 
             resultLength += 1;
+            result.add(item);
           }
         }
       }
+
+      trackResult = result.whereType<Track>().toList();
+      artistResult = result.whereType<Artist>().toList();
+      playlistResult = result.whereType<PlaylistSimple>().toList();
+      albumResult = result.whereType<Album>().toList();
 
       lastSearch = searchTextController.text;
     } catch (e) {
       print('spotify search: $e');
     } finally {
       isLoading = false;
+      print('playlist: ${playlistResult.length} - artist: ${artistResult.length} - track: ${trackResult.length} - album: ${albumResult.length}');
       notifyListeners();
     }
   }
