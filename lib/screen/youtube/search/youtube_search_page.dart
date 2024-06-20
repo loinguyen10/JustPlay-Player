@@ -6,6 +6,7 @@ import 'package:flutter_chocolatecookies/helper/navigator_helper.dart';
 import 'package:flutter_chocolatecookies/widget/item_card.dart';
 import 'package:flutter_justplay_player/screen/youtube/search/youtube_result_page.dart';
 import 'package:flutter_justplay_player/screen/youtube/search/youtube_search_vm.dart';
+import 'package:flutter_justplay_player/style/color.dart';
 import 'package:flutter_justplay_player/widget/app_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -40,6 +41,8 @@ class _YoutubeSearchPageState extends State<YoutubeSearchPage> {
         return SafeArea(
             child: Scaffold(
           appBar: AppBarPlayer(
+            backgroundColor: ytPrimaryColor,
+            foregroundColor: Colors.white,
             leading: InkWell(
               onTap: () {
                 if (vm.result.isNotEmpty) {

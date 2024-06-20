@@ -66,25 +66,23 @@ class _YoutubePlayerPageState extends State<YoutubePlayerPage> {
   void initState() {
     getYTInfo();
     stateChange();
-    // if (widget.youtubeVideo.isLive!) {
-    vm.streamPlayer = PodPlayerController(
-      playVideoFrom: PlayVideoFrom.youtube(
-        'https://youtu.be/$ytId',
-        live: widget.youtubeVideo.isLive!,
-      ),
-    )..initialise().then((_) {
-        setState(() {});
-      });
-    // } else {
-    //   getYTLink();
-    //   vm.videoPlayer = VideoPlayerController.networkUrl(Uri.parse(''))
-    //     ..initialize().then((_) {
-    //       setState(() {});
-    //     });
-    // }
+    if (widget.youtubeVideo.isLive!) {
+      vm.streamPlayer = PodPlayerController(
+        playVideoFrom: PlayVideoFrom.youtube(
+          'https://youtu.be/$ytId',
+          live: widget.youtubeVideo.isLive!,
+        ),
+      )..initialise().then((_) {
+          setState(() {});
+        });
+    } else {
+      getYTLink();
+      vm.videoPlayer = VideoPlayerController.networkUrl(Uri.parse(''))
+        ..initialize().then((_) {
+          setState(() {});
+        });
+    }
     super.initState();
-
-    // vm.audioPlayer.play();
   }
 
   @override

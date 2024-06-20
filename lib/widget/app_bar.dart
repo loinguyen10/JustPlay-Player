@@ -7,6 +7,8 @@ class AppBarPlayer extends StatelessWidget implements PreferredSizeWidget {
     this.title,
     this.actions,
     this.leading,
+    this.backgroundColor,
+    this.foregroundColor,
     // this.leadingShowing = true,
   });
 
@@ -14,6 +16,8 @@ class AppBarPlayer extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget>? actions;
   final Widget? leading;
   // final bool leadingShowing;
+  final Color? backgroundColor;
+  final Color? foregroundColor;
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -21,8 +25,8 @@ class AppBarPlayer extends StatelessWidget implements PreferredSizeWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: Colors.red,
-      foregroundColor: Colors.white,
+      backgroundColor: backgroundColor,
+      foregroundColor: foregroundColor,
       title: title,
       centerTitle: false,
       titleSpacing: 0,

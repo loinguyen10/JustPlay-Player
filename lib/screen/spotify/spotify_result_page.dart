@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_chocolatecookies/flutter_chocolatecookies.dart';
+import 'package:flutter_chocolatecookies/widget/item_card.dart';
+import 'package:flutter_justplay_player/model/spotify/_models.dart';
 import 'package:flutter_justplay_player/screen/spotify/spotify_vm.dart';
+import 'package:flutter_justplay_player/widget/spotify_card.dart';
 
 class SpotifyResultPage extends StatefulWidget {
   const SpotifyResultPage({super.key, required this.vm});
@@ -16,7 +19,6 @@ class _SpotifyResultPageState extends State<SpotifyResultPage> {
 
   @override
   void initState() {
-    getData();
     super.initState();
     _vm.scrollController.addListener(_scrollListener);
   }
@@ -30,11 +32,6 @@ class _SpotifyResultPageState extends State<SpotifyResultPage> {
     }
   }
 
-  Future<void> getData() async {
-    await _vm.search();
-    stateChange();
-  }
-
   @override
   Widget build(BuildContext context) {
     return LoadingPage(
@@ -43,19 +40,19 @@ class _SpotifyResultPageState extends State<SpotifyResultPage> {
         controller: _vm.scrollController,
         itemCount: _vm.result.length,
         itemBuilder: (context, index) {
-          // final item = _vm.result[index];
-          // if (item is PlaylistSimple) {
-          //   //
-          // }
-          // if (item is Artist) {
-          //   //
-          // }
-          // if (item is Track) {
-          //   //
-          // }
-          // if (item is AlbumSimple) {
-          //   //
-          // }
+          final item = _vm.result[index];
+          if (item is PlaylistSimple) {
+            //
+          }
+          if (item is Artist) {
+            return SpArtistCard(artist: item);
+          }
+          if (item is Track) {
+            return SpSongCard(track: item);
+          }
+          if (item is AlbumSimple) {
+            //
+          }
           return space0;
         },
       ),

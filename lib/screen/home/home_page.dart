@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_justplay_player/screen/spotify/spotify_result_page.dart';
+import 'package:flutter_justplay_player/screen/spotify/spotify_search_page.dart';
 import 'package:flutter_justplay_player/screen/spotify/spotify_vm.dart';
 import 'package:flutter_justplay_player/screen/youtube/search/youtube_search_page.dart';
 import 'package:flutter_chocolatecookies/flutter_chocolatecookies.dart';
@@ -20,7 +21,7 @@ class _HomePageState extends State<HomePage> {
       body: ListView(
         children: [
           _buildItem(icon: Icons.play_circle, title: 'Youtube', page: const YoutubeSearchPage(), color: ytPrimaryColor),
-          _buildItem(icon: Icons.wifi_rounded, title: 'Spotify', page: SpotifyResultPage(vm: SpotifyViewModel()), color: spPrimaryColor),
+          _buildItem(icon: Icons.wifi_rounded, title: 'Spotify', page: const SpotifySearchPage(), color: spPrimaryColor),
           _buildItem(icon: Icons.cloud, title: 'Soundcloud', page: Container(), color: scPrimaryColor),
         ],
       ),

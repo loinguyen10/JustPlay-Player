@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_justplay_player/api/spotify_api.dart';
 import 'package:flutter_justplay_player/plugin/spotify/spotify.dart';
@@ -6,15 +8,31 @@ class SpotifyViewModel extends ChangeNotifier {
   // final spotifyAppApi = SpotifyAPI();
   final spotify = SpotifyApi(SpotifyApiCredentials(SpotifyAPI().clientId, SpotifyAPI().clientSecret));
 
-  List result = [];
+  List<PlaylistSimple> playlistResult = [];
+  List<Artist> artistResult = [];
+  List<Track> trackResult = [];
+  List<AlbumSimple> albumResult = [];
+  int resultLength = 0;
   final scrollController = ScrollController();
   bool isLoading = false;
+  final focusNode = FocusNode();
+  final searchTextController = TextEditingController();
+  String lastSearch = '';
+  List<String> autoComplete = [];
+  List result = [];
 
   Future<void> search() async {
     try {
       isLoading = true;
       print("Searching:");
-      var search = await spotify.search.get('low g').first(2);
+      if (searchTextController.text != lastSearch) {
+        playlistResult.clear();
+        artistResult.clear();
+        trackResult.clear();
+        albumResult.clear();
+        resultLength = 0;
+      }
+      var search = await spotify.search.get(searchTextController.text).first();
 
       for (var pages in search) {
         if (pages.items == null) {
@@ -22,21 +40,24 @@ class SpotifyViewModel extends ChangeNotifier {
         } else {
           for (var item in pages.items!) {
             if (item is PlaylistSimple) {
-              print('playlist simple: ${item.name}');
+              playlistResult.add(item);
             }
             if (item is Artist) {
-              print('Artist simple: ${item.name}');
+              artistResult.add(item);
             }
             if (item is Track) {
-              print('Track simple: ${item.name}');
+              trackResult.add(item);
             }
             if (item is AlbumSimple) {
-              print('AlbumSimple simple: ${item.name}');
+              albumResult.add(item);
             }
-            result.add(item);
+
+            resultLength += 1;
           }
         }
       }
+
+      lastSearch = searchTextController.text;
     } catch (e) {
       print('spotify search: $e');
     } finally {

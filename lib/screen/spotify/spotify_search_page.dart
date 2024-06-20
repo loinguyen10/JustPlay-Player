@@ -1,23 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_chocolatecookies/flutter_chocolatecookies.dart';
 import 'package:flutter_chocolatecookies/helper/navigator_helper.dart';
 import 'package:flutter_chocolatecookies/widget/item_card.dart';
-import 'package:flutter_justplay_player/screen/youtube/search/youtube_result_page.dart';
-import 'package:flutter_justplay_player/screen/youtube/search/youtube_search_vm.dart';
+import 'package:flutter_justplay_player/screen/spotify/spotify_result_page.dart';
+import 'package:flutter_justplay_player/screen/spotify/spotify_vm.dart';
+import 'package:flutter_justplay_player/style/color.dart';
 import 'package:flutter_justplay_player/widget/app_bar.dart';
 import 'package:provider/provider.dart';
 
-class YoutubeSearchPage extends StatefulWidget {
-  const YoutubeSearchPage({super.key});
+class SpotifySearchPage extends StatefulWidget {
+  const SpotifySearchPage({super.key});
 
   @override
-  State<YoutubeSearchPage> createState() => _YoutubeSearchPageState();
+  State<SpotifySearchPage> createState() => _SpotifySearchPageState();
 }
 
-class _YoutubeSearchPageState extends State<YoutubeSearchPage> {
-  final vm = YoutubeSearchViewModel();
+class _SpotifySearchPageState extends State<SpotifySearchPage> {
+  final vm = SpotifyViewModel();
 
   @override
   void initState() {
@@ -27,6 +27,13 @@ class _YoutubeSearchPageState extends State<YoutubeSearchPage> {
 
   @override
   void dispose() {
+    if (vm.focusNode.hasFocus) {
+      if (vm.resultLength > 0) {
+        vm.searchTextController.text = vm.lastSearch;
+      }
+      vm.focusNode.unfocus();
+    }
+
     vm.focusNode.dispose();
     vm.scrollController.dispose();
     super.dispose();
@@ -40,9 +47,11 @@ class _YoutubeSearchPageState extends State<YoutubeSearchPage> {
         return SafeArea(
             child: Scaffold(
           appBar: AppBarPlayer(
+            backgroundColor: spPrimaryColor,
+            foregroundColor: Colors.black,
             leading: InkWell(
               onTap: () {
-                if (vm.result.isNotEmpty) {
+                if (vm.resultLength > 0) {
                   if (!vm.focusNode.hasFocus) {
                     NavigatorHelper().popBack();
                   } else {
@@ -78,7 +87,7 @@ class _YoutubeSearchPageState extends State<YoutubeSearchPage> {
               onChanged: (value) async {
                 stateChange();
                 if (value.isNotEmpty) {
-                  await vm.autoCompleteSuggestions();
+                  // await vm.autoCompleteSuggestions();
                 } else {
                   vm.autoComplete.clear();
                 }
@@ -102,7 +111,20 @@ class _YoutubeSearchPageState extends State<YoutubeSearchPage> {
           ),
           body: Stack(
             children: [
-              YoutubeResultPage(vm: vm),
+              SpotifyResultPage(vm: vm),
+              ItemCard(
+                margin: EdgeInsets.zero,
+                padding: EdgeInsets.zero,
+                cardColor: Colors.red,
+                child: Row(
+                  children: [
+                    buildTabBar(vm.trackResult, 'Track'),
+                    buildTabBar(vm.artistResult, 'Artist'),
+                    buildTabBar(vm.playlistResult, 'Playlist'),
+                    buildTabBar(vm.albumResult, 'Album'),
+                  ],
+                ),
+              ),
               Visibility(
                 visible: vm.focusNode.hasFocus,
                 child: Container(
@@ -145,7 +167,7 @@ class _YoutubeSearchPageState extends State<YoutubeSearchPage> {
           InkWell(
             onTap: () async {
               vm.searchTextController.text = value;
-              await vm.autoCompleteSuggestions();
+              // await vm.autoCompleteSuggestions();
             },
             child: const Padding(
                 padding: EdgeInsets.all(8),
@@ -157,5 +179,16 @@ class _YoutubeSearchPageState extends State<YoutubeSearchPage> {
       ),
     );
     return item;
+  }
+
+  buildTabBar(List list, String title) {
+    return ItemCard(
+      onTap: () {
+        vm.result = list;
+        stateChange();
+      },
+      borderColor: Colors.black,
+      child: Text(title),
+    );
   }
 }

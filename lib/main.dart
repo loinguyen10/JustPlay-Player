@@ -31,8 +31,10 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     AppTheme().start();
-    return const ChocolateCookiesMaterialApp(
+    return MaterialApp(
+      navigatorKey: GlobalContextService.navigatorKey,
       debugShowCheckedModeBanner: false,
+      theme: AppTheme().appTheme,
       home: HomePage(),
     );
   }
