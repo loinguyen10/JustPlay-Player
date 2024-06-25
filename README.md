@@ -1,16 +1,6 @@
-# flutter_justplay_player
+# JustPlay Player
+Media Player with 2 in 1 (Youtube, Spotify) for Mobile using Flutter
 
-A new Flutter project.
+Make for some personal reasons: To use and want to train this language.
 
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+##Important: Need to use: [Flutter Chocolatecookies module](https://github.com/loinguyen10/flutter_chocolatecookies)
